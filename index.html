@@ -8,12 +8,67 @@
     <!-- Import Vue.js -->
     <script src="https://unpkg.com/vue@3.0.0-beta.12/dist/vue.global.js"></script>
   </head>
+
   <body>
     <div id="app">
-      <h1>Product goes here</h1>
-    </div>
+      <div class="nav-bar"></div>
+      <div class="cart">Cart({{ cart }})</div>
 
-    <!-- Import Js -->
+      <div class="product-display">
+        <div class="product-container">
+          <div class="product-image">
+            <img v-bind:src="image" :class="{ 'out-of-stock-img' : !inStock}" />
+            <!-- <a :href="url">google</a> -->
+          </div>
+
+          <div class="product-info">
+            <h1>{{ title }}</h1>
+            {{ displayOnSale }}
+
+            <p v-if="inventory > 10">In Stock</p>
+            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out</p>
+            <p v-else>Out of Stock</p>
+
+            <div v-for="size in sizes">{{size.size}}</div>
+            <ul>
+              <li v-for="(size2, index) in sizes2" :key="index">{{size2}}</li>
+            </ul>
+            <ul>
+              <li v-for="detail in details">{{ detail }}</li>
+            </ul>
+            <!-- key : gives each DOM element a unique key,
+        not gonna miss the update/change -->
+            <div
+              v-for="(variant, index) in variants"
+              :key="variant.id"
+              @mouseover="updateVariant(index)"
+              class="color-circle"
+              :style="
+           {
+            backgroundColor: variant.color
+          }
+        "
+            ></div>
+            <p>{{ description+" "+product}}</p>
+            <button class="button" v-on:click="addToCart">Add to Cart</button>
+            <button
+              class="button"
+              :class="{ disabledButton : !inStock}"
+              v-on:click="decFromCart"
+              :disabled="!inStock"
+            >
+              decrements cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Import App -->
     <script src="./main.js"></script>
+
+    <!-- Mount App -->
+    <script>
+      const mountedApp = app.mount("#app");
+    </script>
   </body>
 </html>
